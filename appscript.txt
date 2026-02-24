@@ -1,0 +1,110 @@
+/**
+ * Version: Checkpoint-7.1 | Status: Format Specific Auto-Increment (QT/RHI/YYYY/MM/DD-001)
+ */
+
+function doGet(e) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let action = null;
+  try {
+    action = (e && e.parameter && e.parameter.action) ? e.parameter.action : null;
+  } catch(err) { action = null; }
+
+  // --- ACTION: GET NEXT FORMATTED QUOTATION NUMBER ---
+  if (action === "getNextQuotNo") {
+    const sheet = ss.getSheetByName("Quotation");
+    const now = new Date();
+    const dateStr = Utilities.formatDate(now, ss.getSpreadsheetTimeZone(), "yyyy/MM/dd");
+    const prefix = "QT/RHI/" + dateStr + "-";
+    let maxSerial = 0;
+
+    if (sheet) {
+      const data = sheet.getDataRange().getValues();
+      for (let i = 1; i < data.length; i++) {
+        const qNo = String(data[i][1]); // Column B
+        if (qNo.startsWith(prefix)) {
+          const parts = qNo.split("-");
+          const lastPart = parseInt(parts[parts.length - 1]);
+          if (!isNaN(lastPart) && lastPart > maxSerial) {
+            maxSerial = lastPart;
+          }
+        }
+      }
+    }
+    const nextSerial = String(maxSerial + 1).padStart(3, '0');
+    return createResponse({ nextQuotNo: prefix + nextSerial });
+  }
+
+  // --- ACTION: SEARCH QUOTATION ---
+  if (action === "getQuotation") {
+    const quotNo = e.parameter.quotNo;
+    const sheet = ss.getSheetByName("Quotation");
+    if (!sheet) return createResponse({ status: "error", message: "Sheet not found" });
+
+    const data = sheet.getDataRange().getValues();
+    for (let i = 1; i < data.length; i++) {
+      if (data[i][1] === quotNo) {
+        return createResponse({
+          status: "success",
+          data: {
+            custName: data[i][2],
+            siteAddr: data[i][3],
+            quotNo: data[i][1],
+            date: data[i][4],
+            plannedRooms: JSON.parse(data[i][5]),
+            manualItems: JSON.parse(data[i][6]),
+            grandTotal: data[i][7],
+            terms: data[i][8]
+          }
+        });
+      }
+    }
+    return createResponse({ status: "error", message: "Not found" });
+  }
+
+  // --- DEFAULT ACTION: SYNC DEVICES ---
+  const sheetNames = ["Elixir Glass Touch Panel", "Elite Panel Customized", "Touch Panel Switches", "Devices", "Acrylic Devices", "Switchplates"];
+  const database = {};
+  sheetNames.forEach(name => {
+    const sheet = ss.getSheetByName(name);
+    if (sheet) {
+      const data = sheet.getDataRange().getValues();
+      if (data.length < 2) return;
+      const headers = data[0]; 
+      const findCol = (t) => headers.findIndex(h => h.toString().toLowerCase().includes(t.toLowerCase()));
+      const iI = findCol("Item"), iH = findCol("HSN"), iM = findCol("MRP"), iG = findCol("GST"), iD = findCol("Discount");
+      database[name] = data.slice(1).map(row => ({
+        item: iI !== -1 ? String(row[iI]).trim() : "",
+        hsn: iH !== -1 ? String(row[iH]) : "",
+        mrp: iM !== -1 ? parseFloat(String(row[iM]).replace(/[^0-9.]/g, '')) || 0 : 0,
+        discount: iD !== -1 ? parseFloat(String(row[iD]).replace(/[^0-9.]/g, '')) || 0 : 0,
+        gst: iG !== -1 ? (parseFloat(row[iG]) < 1 ? parseFloat(row[iG]) * 100 : parseFloat(row[iG])) || 18 : 18
+      })).filter(r => r.item && r.item.length > 5 && !r.item.includes("COLOR") && r.mrp > 0);
+    }
+  });
+  return createResponse(database);
+}
+
+function doPost(e) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName("Quotation") || ss.insertSheet("Quotation");
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(["Timestamp", "Quotation No", "Customer Name", "Site Address", "Date", "Planned Rooms JSON", "Manual Items JSON", "Grand Total", "Terms"]);
+  }
+  const payload = JSON.parse(e.postData.contents);
+  const rowData = [new Date(), payload.quotNo, payload.custName, payload.siteAddr, payload.date, JSON.stringify(payload.plannedRooms), JSON.stringify(payload.manualItems), payload.grandTotal, payload.terms];
+  const data = sheet.getDataRange().getValues();
+  let updated = false;
+  for (let i = 1; i < data.length; i++) {
+    if (data[i][1] === payload.quotNo) {
+      sheet.getRange(i + 1, 1, 1, rowData.length).setValues([rowData]);
+      updated = true;
+      break;
+    }
+  }
+  if (!updated) sheet.appendRow(rowData);
+  return createResponse({ status: "success", updated: updated });
+}
+
+function createResponse(content) {
+  return ContentService.createTextOutput(JSON.stringify(content)).setMimeType(ContentService.MimeType.JSON);
+}
