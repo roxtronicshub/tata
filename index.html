@@ -1,0 +1,728 @@
+<!-- Version: Checkpoint-11 | Status: Quot No & Date as Labels, Auto-Increment, Auto-Reset, Success Modal -->
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Automation Master Planner | Roxtronics Hub India</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #10b981;
+            --danger: #ef4444;
+            --bg: #f1f5f9;
+            --text: #0f172a;
+            --border: #cbd5e1;
+        }
+        
+        * { box-sizing: border-box; }
+        
+        body { 
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; 
+            background-color: var(--bg); 
+            color: var(--text); 
+            padding: 15px; 
+            margin: 0;
+        }
+
+        .container { 
+            max-width: 1440px; 
+            margin: auto; 
+            background: white; 
+            padding: 40px; 
+            border-radius: 12px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
+        }
+
+        /* Tabs Styling */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
+        }
+        .tab-btn {
+            padding: 10px 20px;
+            border: none;
+            background: #e2e8f0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Header & Logo Section */
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .logos-wrapper { display: flex; align-items: center; gap: 20px; }
+        .company-logo-area { display: flex; align-items: center; gap: 15px; padding: 5px; }
+        .company-logo-area img { max-height: 55px; width: auto; object-fit: contain; }
+        .tata-logo-black { filter: grayscale(1) brightness(0); }
+        .logo-divider { height: 35px; width: 2px; background-color: #cbd5e1; margin: 0 5px; }
+        .partner-tag { font-size: 10px; color: #64748b; font-weight: bold; text-transform: uppercase; }
+        .quotation-title { text-align: right; }
+        .quotation-title h1 { margin: 0; color: var(--primary); font-size: 32px; text-transform: uppercase; letter-spacing: 2px; }
+
+        /* Search Section UI */
+        .search-box-container {
+            display: flex;
+            gap: 5px;
+            margin-top: 10px;
+            justify-content: flex-end;
+        }
+        .search-input {
+            padding: 6px 12px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 13px;
+            width: 220px;
+        }
+
+        /* Room Card Grid */
+        .room-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .room-card {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: #f8fafc;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: 0.3s;
+        }
+        .room-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .room-card-header {
+            background: #334155;
+            color: white;
+            padding: 10px 15px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+        }
+        .room-card-body { padding: 15px; flex-grow: 1; }
+        .device-list { list-style: none; padding: 0; margin: 0; font-size: 13px; }
+        .device-item { 
+            display: flex; 
+            justify-content: space-between; 
+            padding: 5px 0; 
+            border-bottom: 1px solid #e2e8f0; 
+        }
+        .room-card-footer { padding: 10px; background: #f1f5f9; border-top: 1px solid var(--border); }
+
+        .add-device-ui {
+            margin-top: 15px;
+            border-top: 1px dashed #cbd5e1;
+            padding-top: 10px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            align-items: center;
+        }
+        .add-device-ui select, .add-device-ui input { width: 100%; font-size: 11px; padding: 5px; border-radius: 4px; border: 1px solid var(--border); }
+
+        /* Common Styling */
+        .project-info { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; padding: 20px; background: #f8fafc; border-radius: 8px; border: 1px solid var(--border); }
+        .info-group label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 13px; color: #475569; }
+        .info-group input { width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; }
+        .display-label { padding: 8px 0; font-weight: 700; color: var(--text); font-size: 14px; min-height: 35px; display: flex; align-items: center; }
+
+        .table-container { overflow-x: auto; margin-top: 10px; }
+        table { width: 100%; border-collapse: collapse; min-width: 1200px; table-layout: fixed; }
+        th { background-color: #334155; color: white; font-weight: 600; text-align: left; padding: 12px 8px; font-size: 11px; text-transform: uppercase; }
+        td { padding: 8px; border-bottom: 1px solid var(--border); vertical-align: middle; word-wrap: break-word; overflow-wrap: break-word; }
+        select, .row-input { width: 100%; padding: 8px 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 13px; }
+        .readonly-input { background-color: #f8fafc; font-weight: 600; color: #1e293b; border: none; }
+        
+        .grand-total-section { margin-top: 25px; padding: 20px; background: #1e293b; color: white; border-radius: 8px; display: flex; justify-content: flex-end; gap: 40px; }
+        .total-box h3 { margin: 0; font-size: 14px; color: #94a3b8; }
+        .total-box p { margin: 5px 0 0 0; font-size: 22px; font-weight: bold; }
+        
+        .val-mirror, .terms-print-mirror { display: none; font-size: 12px; white-space: pre-wrap; color: #000; }
+        .signature-box { margin-top: 60px; width: 250px; border-top: 1px solid #334155; padding-top: 10px; text-align: center; font-weight: bold; }
+
+        .actions { margin-top: 25px; display: flex; gap: 15px; }
+        .btn { padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-add { background-color: var(--primary); color: white; }
+        .btn-other { background-color: #64748b; color: white; }
+        .btn-sync { background-color: var(--secondary); color: white; font-size: 12px; padding: 6px 12px; }
+        .btn-save { background-color: #f59e0b; color: white; }
+        .btn-print { background-color: #334155; color: white; margin-left: auto; }
+        .btn-reset { background-color: #94a3b8; color: white; }
+        
+        .status-badge { font-size: 10px; padding: 4px 8px; border-radius: 12px; font-weight: bold; }
+        .status-online { background: #dcfce7; color: #166534; }
+        .status-offline { background: #fee2e2; color: #991b1b; }
+        
+        #toast { position: fixed; bottom: 20px; right: 20px; padding: 12px 24px; border-radius: 8px; background: #1e293b; color: white; font-size: 14px; display: none; z-index: 2000; box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
+
+        /* Modal / Popup Styling */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 1000; }
+        .modal-content { background: white; padding: 30px; border-radius: 12px; width: 400px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); text-align: center; }
+        .multiplier-grid { display: grid; gap: 10px; margin: 20px 0; text-align: left; }
+        .multiplier-row { display: flex; justify-content: space-between; align-items: center; }
+
+        @media print {
+            @page { size: A4 landscape; margin: 8mm; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            .no-print, .tabs, .room-grid-header { display: none !important; }
+            body { background: white !important; padding: 0 !important; overflow: visible !important; }
+            .container { box-shadow: none !important; border: none !important; max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
+            .table-container { overflow: visible !important; width: 100% !important; max-width: 100% !important; }
+            table { width: 100% !important; min-width: 1px !important; table-layout: fixed !important; border-collapse: collapse !important; border: 1px solid #cbd5e1 !important; margin: 0 !important; }
+            th, td { border: 1px solid #cbd5e1 !important; padding: 4px !important; font-size: 8pt !important; word-wrap: break-word !important; color: #000 !important; }
+            th { background-color: #334155 !important; color: white !important; }
+            input, select, textarea { display: none !important; }
+            .val-mirror, .terms-print-mirror { display: block !important; visibility: visible !important; width: 100% !important; }
+            .grand-total-section { background: #1e293b !important; color: white !important; padding: 15px !important; display: flex !important; justify-content: flex-end !important; }
+            .project-info { border: 1px solid #cbd5e1 !important; background: #f8fafc !important; border-radius: 8px !important; padding: 10px !important; }
+            #grandTotal { color: #10b981 !important; font-weight: bold !important; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="toast"></div>
+
+<!-- Success Modal -->
+<div id="successModal" class="modal-overlay">
+    <div class="modal-content">
+        <div style="font-size: 50px; color: var(--secondary); margin-bottom: 15px;">✅</div>
+        <h2 style="color: var(--text); margin-bottom: 10px;">Successfully Saved!</h2>
+        <p style="color: #64748b; margin-bottom: 25px;">Quotation has been saved to the cloud and synced with Google Sheets.</p>
+        <button class="btn btn-add" style="width: 100%; justify-content: center;" onclick="closeSuccessModal()">Great!</button>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Header -->
+    <div class="header-top">
+        <div class="logos-wrapper">
+            <div class="company-logo-area">
+                <img src="https://www.tatapower.com/content/experience-fragments/tatapoweraemsitesprogram/in/en/tatapower/header/Header-ExpressoTheme/_jcr_content/root/container/navigation/image.coreimg.svg/1723030002763/tp-logo.svg" 
+                     alt="Tata Power Logo" class="tata-logo-black">
+                <div class="logo-divider"></div>
+                <div style="display: flex; flex-direction: column;">
+                    <span class="partner-tag">Channel Partner</span>
+                    <img src="https://roxtronicshub.github.io/rhi.png" alt="RHI Logo" style="max-height: 45px;">
+                </div>
+            </div>
+        </div>
+        <div class="quotation-title">
+            <h1 style="color: var(--primary);">Quotation</h1>
+            <p style="margin:5px 0; color:#64748b;">Home Automation Solutions</p>
+            <div class="search-box-container no-print">
+                <input type="text" id="searchQuotInput" class="search-input" placeholder="Search Quot No (e.g. 001)">
+                <button class="btn btn-sync" style="padding: 5px 10px;" onclick="searchQuotation()">🔍 Find</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="tabs no-print">
+        <button class="tab-btn active" onclick="switchTab('planner')">🛠 Room Planner</button>
+        <button class="tab-btn" onclick="switchTab('quotation')">📄 Quotation View</button>
+    </div>
+
+    <div class="header-status no-print">
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <span id="syncStatus" class="status-badge status-offline">Connecting...</span>
+        </div>
+        <button class="btn btn-sync" onclick="fetchLiveData()">🔄 Sync Master Data</button>
+    </div>
+
+    <!-- Project Info Bar -->
+    <div class="project-info">
+        <div class="info-group">
+            <label>Customer Name</label>
+            <input type="text" placeholder="Rahul Sharma" id="custName" oninput="mirrorProjectInfo(this)">
+            <div class="val-mirror"></div>
+        </div>
+        <div class="info-group">
+            <label>Site Address</label>
+            <input type="text" placeholder="Location" id="siteAddr" oninput="mirrorProjectInfo(this)">
+            <div class="val-mirror"></div>
+        </div>
+        <div class="info-group">
+            <label>Quotation No.</label>
+            <div id="quotNo" class="display-label" style="color: var(--primary);">Loading...</div>
+            <div class="val-mirror"></div>
+        </div>
+        <div class="info-group">
+            <label>Date</label>
+            <div id="quotDate" class="display-label">Loading...</div>
+            <div class="val-mirror"></div>
+        </div>
+    </div>
+
+    <div id="plannerTab" class="tab-content">
+        <div class="room-grid-header no-print" style="margin-bottom: 20px; display: flex; gap: 10px;">
+            <button class="btn btn-add" onclick="showRoomPopup()">+ Add Rooms / Configure Site</button>
+            <button class="btn btn-other" onclick="showCustomRoomPopup()">+ Add Other Room</button>
+        </div>
+        <div id="roomContainer" class="room-grid">
+            <div style="text-align: center; grid-column: 1/-1; padding: 40px; color: #94a3b8;">
+                Click "+ Add Rooms" or "+ Add Other Room" to start planning.
+            </div>
+        </div>
+    </div>
+
+    <div id="quotationTab" class="tab-content" style="display:none;">
+        <div class="table-container">
+            <table id="mainTable">
+                <thead>
+                    <tr>
+                        <th style="width: 3%;">#</th>
+                        <th style="width: 8%;">Room Name</th>
+                        <th style="width: 10%;">Series</th>
+                        <th style="width: 25%;">Item & Description</th>
+                        <th style="width: 8%;">HSN</th>
+                        <th style="width: 4%;">Qty</th>
+                        <th style="width: 7%;">MRP</th>
+                        <th style="width: 5%;">Disc%</th>
+                        <th style="width: 7%;">Base</th>
+                        <th style="width: 7%;">Amt</th>
+                        <th style="width: 4%;">GST%</th>
+                        <th style="width: 6%;">GST Amt</th>
+                        <th style="width: 6%;">Total</th>
+                        <th class="no-print" style="width: 40px;"></th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
+        <div class="add-row-container no-print" style="margin-top: 10px;">
+            <button class="btn btn-add" onclick="addRow()">+ Manually Add Line Item</button>
+        </div>
+
+        <div class="grand-total-section">
+            <div class="total-box"><h3>Taxable Amount</h3><p id="totalBase">₹0.00</p></div>
+            <div class="total-box"><h3>Total GST</h3><p id="totalGST">₹0.00</p></div>
+            <div class="total-box" style="border-left: 1px solid #475569; padding-left: 40px;">
+                <h3>Grand Total</h3><p id="grandTotal" style="color: #10b981; font-weight: bold;">₹0.00</p>
+            </div>
+        </div>
+
+        <div class="quotation-footer" style="margin-top: 40px; display: grid; grid-template-columns: 1.5fr 1fr; gap: 50px;">
+            <div class="terms-section">
+                <h4>Terms & Conditions</h4>
+                <textarea id="termsArea" oninput="syncTerms()" style="width:100%; height:100px; border:1px solid var(--border); border-radius:6px; padding:10px;">1. Prices are valid for 15 days from the date of quotation.
+2. 50% Advance with Purchase Order, balance before dispatch.
+3. Standard 1-year warranty on manufacturing defects.
+4. Installation charges extra if not specified above.</textarea>
+                <div id="termsMirror" class="terms-print-mirror"></div>
+            </div>
+            <div class="signature-section" style="text-align: right; display: flex; flex-direction: column; justify-content: flex-end;">
+                <div style="font-weight: bold; margin-bottom: 10px;">For Roxtronics Hub India</div>
+                <div class="signature-box">Authorized Signatory</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="actions no-print">
+        <button class="btn btn-reset" onclick="resetApp()">🆕 New Quotation (Reset)</button>
+        <button class="btn btn-save" onclick="saveQuotation()">💾 Save Quotation to Cloud</button>
+        <button class="btn btn-print" onclick="window.print()">Download Quotation (PDF)</button>
+    </div>
+</div>
+
+<!-- Modals -->
+<div id="roomModal" class="modal-overlay">
+    <div class="modal-content" style="text-align: left;">
+        <h2>🏗 Add Room Configuration</h2>
+        <div class="multiplier-grid" id="multiplierInputs"></div>
+        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+            <button class="tab-btn" style="background:#cbd5e1" onclick="closeRoomPopup()">Cancel</button>
+            <button class="tab-btn active" onclick="generateRoomCards()">Create Cards</button>
+        </div>
+    </div>
+</div>
+
+<div id="customRoomModal" class="modal-overlay">
+    <div class="modal-content" style="text-align: left;">
+        <h2>✨ Add Other Room</h2>
+        <div style="margin-bottom: 15px;">
+            <label style="display:block; font-size:12px; font-weight:600; margin-bottom:5px;">Room Name</label>
+            <input type="text" id="customRoomName" placeholder="e.g. Gym, Library" style="width:100%; padding:10px; border:1px solid var(--border); border-radius:6px;">
+        </div>
+        <div style="margin-bottom: 20px;">
+            <label style="display:block; font-size:12px; font-weight:600; margin-bottom:5px;">Quantity</label>
+            <input type="number" id="customRoomCount" value="1" min="1" style="width:100%; padding:10px; border:1px solid var(--border); border-radius:6px;">
+        </div>
+        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+            <button class="tab-btn" style="background:#cbd5e1" onclick="closeCustomRoomPopup()">Cancel</button>
+            <button class="tab-btn active" onclick="addCustomRooms()">Add Rooms</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let deviceDatabase = {};
+    let plannedRooms = []; 
+    let manualItems = []; 
+    const roomsList = ["Living Room", "Master Bedroom", "Bedroom 2", "Kitchen", "Dining Area", "Bathroom", "Balcony", "Home Theatre"];
+    const inbuiltUrl = "https://script.google.com/macros/s/AKfycbw-Rba94kLqabkhEDAt9BHn9xG_AfwOr9urMe9PSfYifOAPl5wUGmvi2aMKxMmT5Ki5zg/exec";
+
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        t.innerText = msg; t.style.display = 'block';
+        setTimeout(() => t.style.display = 'none', 3000);
+    }
+
+    // --- SUCCESS MODAL & RESET LOGIC ---
+    function openSuccessModal() { document.getElementById('successModal').style.display = 'flex'; }
+    function closeSuccessModal() { document.getElementById('successModal').style.display = 'none'; }
+
+    function resetApp() {
+        document.getElementById('searchQuotInput').value = "";
+        plannedRooms = [];
+        manualItems = [];
+        document.getElementById('custName').value = "";
+        document.getElementById('siteAddr').value = "";
+        
+        // Reset Labels and Mirrors
+        document.getElementById('quotNo').innerText = "Loading...";
+        document.getElementById('quotDate').innerText = "Loading...";
+        document.querySelectorAll('.project-info .val-mirror').forEach(m => m.innerText = "");
+        
+        // Refresh auto data
+        updateAutomaticFields();
+        
+        renderRoomCards();
+        syncPlannerToQuotation();
+        switchTab('planner');
+        showToast("App Reset for New Quotation!");
+    }
+
+    // Set today's date automatically in DD/MM/YYYY or YYYY/MM/DD format
+    function updateAutomaticFields() {
+        const d = new Date();
+        const yyyy = d.getFullYear();
+        const mm = String(d.getMonth() + 1).padStart(2, '0');
+        const dd = String(d.getDate()).padStart(2, '0');
+        const dateStr = `${dd}/${mm}/${yyyy}`;
+        
+        document.getElementById('quotDate').innerText = dateStr;
+        
+        // Update mirror for print
+        const dateMirror = document.getElementById('quotDate').nextElementSibling;
+        if (dateMirror) dateMirror.innerText = dateStr;
+        
+        fetchNextQuotNo();
+    }
+
+    // --- AUTO-INCREMENT FETCH ---
+    async function fetchNextQuotNo() {
+        try {
+            const response = await fetch(`${inbuiltUrl}?action=getNextQuotNo`);
+            const data = await response.json();
+            if (data && data.nextQuotNo) {
+                document.getElementById('quotNo').innerText = data.nextQuotNo;
+                // Update mirror for print
+                const qMirror = document.getElementById('quotNo').nextElementSibling;
+                if (qMirror) qMirror.innerText = data.nextQuotNo;
+            }
+        } catch (e) { 
+            console.error("Format No fetch error", e); 
+            document.getElementById('quotNo').innerText = "Manual Sync Needed";
+        }
+    }
+
+    // --- MASTER DATA SYNC ---
+    async function fetchLiveData() {
+        const syncStatus = document.getElementById('syncStatus');
+        syncStatus.innerText = "Syncing...";
+        syncStatus.className = "status-badge status-offline";
+        try {
+            const response = await fetch(inbuiltUrl + "?t=" + Date.now()); 
+            const data = await response.json();
+            if (data && Object.keys(data).length > 0) {
+                deviceDatabase = data;
+                syncStatus.innerText = "Live Connected";
+                syncStatus.className = "status-badge status-online";
+                renderRoomCards();
+                showToast("Master Data Synced!");
+            } else { throw new Error("Empty data"); }
+        } catch (error) { 
+            console.error("Sync Error:", error);
+            syncStatus.innerText = "Sync Failed"; 
+            showToast("Sync Failed: Check Apps Script");
+        }
+    }
+
+    // --- SEARCH ---
+    async function searchQuotation() {
+        const searchVal = document.getElementById('searchQuotInput').value;
+        if (!searchVal) { showToast("Enter Quot No. to search!"); return; }
+        showToast("Searching...");
+        try {
+            const response = await fetch(`${inbuiltUrl}?action=getQuotation&quotNo=${searchVal}`);
+            const result = await response.json();
+            if (result && result.status === "success") {
+                const data = result.data;
+                document.getElementById('custName').value = data.custName || "";
+                document.getElementById('siteAddr').value = data.siteAddr || "";
+                
+                // Update Display Labels
+                document.getElementById('quotNo').innerText = data.quotNo || "";
+                document.getElementById('quotDate').innerText = data.date || "";
+                
+                // Update Mirrors
+                document.getElementById('quotNo').nextElementSibling.innerText = data.quotNo || "";
+                document.getElementById('quotDate').nextElementSibling.innerText = data.date || "";
+                
+                document.getElementById('termsArea').value = data.terms || "";
+                plannedRooms = data.plannedRooms || [];
+                manualItems = data.manualItems || [];
+                
+                renderRoomCards(); 
+                syncPlannerToQuotation(); 
+                syncTerms();
+                document.querySelectorAll('.project-info input').forEach(mirrorProjectInfo);
+                showToast("Quotation Found!");
+            } else { showToast("Not Found!"); }
+        } catch (e) { showToast("Search Error!"); }
+    }
+
+    // --- SAVE ---
+    async function saveQuotation() {
+        if (document.getElementById('quotationTab').style.display === 'block') saveManualEntriesToMemory();
+        const qNo = document.getElementById('quotNo').innerText;
+        if (qNo === "Loading..." || qNo === "Manual Sync Needed") { showToast("Wait for Quotation No. to load!"); return; }
+        
+        const payload = { 
+            action: "saveQuotation", 
+            quotNo: qNo, 
+            custName: document.getElementById('custName').value, 
+            siteAddr: document.getElementById('siteAddr').value, 
+            date: document.getElementById('quotDate').innerText, 
+            plannedRooms: plannedRooms, 
+            manualItems: manualItems, 
+            grandTotal: document.getElementById('grandTotal').innerText, 
+            terms: document.getElementById('termsArea').value 
+        };
+        
+        showToast("Saving...");
+        try {
+            await fetch(inbuiltUrl, { method: 'POST', mode: 'no-cors', cache: 'no-cache', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+            openSuccessModal();
+            resetApp();
+        } catch (e) { showToast("Save Error!"); }
+    }
+
+    // --- TAB & INDEXING ---
+    function switchTab(tab) {
+        const currentTabIsQuotation = document.getElementById('quotationTab').style.display === 'block';
+        if (currentTabIsQuotation && tab === 'planner') saveManualEntriesToMemory();
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+        if (tab === 'planner') {
+            document.getElementById('plannerTab').style.display = 'block';
+            document.querySelectorAll('.tab-btn')[0].classList.add('active');
+        } else {
+            document.getElementById('quotationTab').style.display = 'block';
+            document.querySelectorAll('.tab-btn')[1].classList.add('active');
+            syncPlannerToQuotation();
+        }
+    }
+
+    function saveManualEntriesToMemory() {
+        manualItems = [];
+        document.querySelectorAll('#tableBody tr.is-manual').forEach(row => {
+            manualItems.push({ room: row.querySelector('.room-input').value, series: row.querySelector('.series-select').value, item: row.querySelector('.item-select').value, hsn: row.querySelector('.hsn-code').value, qty: row.querySelector('.qty').value, mrp: row.querySelector('.mrp').value, disc: row.querySelector('.disc').value, gst: row.querySelector('.gst-perc').value });
+        });
+    }
+
+    function updateIndices() {
+        document.querySelectorAll('.row-index').forEach((el, idx) => { el.innerText = idx + 1; });
+    }
+
+    function mirrorProjectInfo(el) { 
+        const m = el.nextElementSibling; 
+        if (m && m.classList.contains('val-mirror')) m.innerText = el.value; 
+    }
+    
+    function mirrorValue(el) {
+        const mirror = el.parentElement.querySelector('.val-mirror');
+        if (mirror) {
+            let val = el.tagName === 'SELECT' ? el.options[el.selectedIndex]?.text || '' : el.value;
+            if(el.classList.contains('disc') || el.classList.contains('gst-perc')) val = parseFloat(el.value || 0).toFixed(2);
+            mirror.innerText = val;
+        }
+    }
+
+    // --- ROOM CARDS ---
+    function showRoomPopup() {
+        const grid = document.getElementById('multiplierInputs');
+        grid.innerHTML = roomsList.map(r => `<div class="multiplier-row"><label>${r}</label><input type="number" data-room="${r}" value="0" min="0" style="width:50px; text-align:center;"></div>`).join('');
+        document.getElementById('roomModal').style.display = 'flex';
+    }
+    function closeRoomPopup() { document.getElementById('roomModal').style.display = 'none'; }
+    function showCustomRoomPopup() { document.getElementById('customRoomName').value = ""; document.getElementById('customRoomCount').value = "1"; document.getElementById('customRoomModal').style.display = 'flex'; }
+    function closeCustomRoomPopup() { document.getElementById('customRoomModal').style.display = 'none'; }
+
+    function addCustomRooms() {
+        const name = document.getElementById('customRoomName').value.trim();
+        const count = parseInt(document.getElementById('customRoomCount').value) || 0;
+        if (name && count > 0) { createRoomLogic(name, count); closeCustomRoomPopup(); renderRoomCards(); }
+    }
+
+    function createRoomLogic(type, qty) {
+        const existing = plannedRooms.filter(r => r.name.toLowerCase().startsWith(type.toLowerCase()));
+        const start = existing.length + 1;
+        for(let i=0; i<qty; i++) plannedRooms.push({ id: Date.now()+Math.random(), name: `${type} ${start+i}`, devices: [] });
+    }
+
+    function generateRoomCards() {
+        document.querySelectorAll('#multiplierInputs input').forEach(inp => {
+            const q = parseInt(inp.value); if(q > 0) createRoomLogic(inp.getAttribute('data-room'), q);
+        });
+        closeRoomPopup(); renderRoomCards();
+    }
+
+    function renderRoomCards() {
+        const container = document.getElementById('roomContainer');
+        if (plannedRooms.length === 0) { container.innerHTML = `<div style="text-align: center; grid-column: 1/-1; padding: 40px; color: #94a3b8;">Click "+ Add Rooms" to start planning.</div>`; return; }
+        
+        container.innerHTML = plannedRooms.map((room, idx) => {
+            const seriesOpts = Object.keys(deviceDatabase).map(s => `<option value="${s}">${s}</option>`).join('');
+            return `
+                <div class="room-card">
+                    <div class="room-card-header"><span>${room.name}</span><button style="background:none; color:white; border:none; cursor:pointer;" onclick="deleteRoom(${idx})">✖</button></div>
+                    <div class="room-card-body">
+                        <ul class="device-list">${room.devices.map((d, dIdx) => `<li class="device-item"><span>${d.item} <b>x${d.qty}</b></span><span class="no-print" style="cursor:pointer; color:red;" onclick="removeDevice(${idx}, ${dIdx})">🗑</span></li>`).join('')}</ul>
+                        <div class="add-device-ui no-print">
+                            <select class="room-series-select-${idx}" onchange="updateRoomCardItems(${idx})"><option value="">Series...</option>${seriesOpts}</select>
+                            <select class="room-item-select-${idx}"><option value="">Item...</option></select>
+                            <input type="number" class="room-qty-input-${idx}" value="1" min="1" placeholder="Qty">
+                            <button class="btn btn-add" style="padding:5px 8px; font-size:11px;" onclick="addDeviceToRoom(${idx})">Add</button>
+                        </div>
+                    </div>
+                    <div class="room-card-footer"><small>Room Total: <b>₹${calculateRoomTotal(room).toLocaleString()}</b></small></div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function updateRoomCardItems(idx) {
+        const seriesSelect = document.querySelector(`.room-series-select-${idx}`);
+        const itemSelect = document.querySelector(`.room-item-select-${idx}`);
+        const selectedSeries = seriesSelect.value;
+        itemSelect.innerHTML = '<option value="">Item...</option>';
+        if (selectedSeries && deviceDatabase[selectedSeries]) {
+            deviceDatabase[selectedSeries].forEach(p => {
+                const opt = document.createElement('option'); opt.value = p.item; opt.textContent = p.item; itemSelect.appendChild(opt);
+            });
+        }
+    }
+
+    function addDeviceToRoom(idx) {
+        const seriesSelect = document.querySelector(`.room-series-select-${idx}`);
+        const itemSelect = document.querySelector(`.room-item-select-${idx}`);
+        const qtyInput = document.querySelector(`.room-qty-input-${idx}`);
+        const series = seriesSelect.value;
+        const itemName = itemSelect.value;
+        const qty = parseInt(qtyInput.value) || 1;
+        if (!series || !itemName) { showToast("Please select Series and Item"); return; }
+        const p = deviceDatabase[series].find(x => x.item === itemName);
+        let disc = p.discount || 0; if(disc > 0 && disc < 1) disc *= 100;
+        let gst = p.gst || 18; if(gst > 0 && gst < 1) gst *= 100;
+        plannedRooms[idx].devices.push({ series: series, item: itemName, hsn: p.hsn, mrp: p.mrp, discount: disc, gst: gst, qty: qty });
+        seriesSelect.value = ""; itemSelect.innerHTML = '<option value="">Item...</option>'; qtyInput.value = "1";
+        renderRoomCards();
+    }
+
+    function removeDevice(r, d) { plannedRooms[r].devices.splice(d, 1); renderRoomCards(); }
+    function deleteRoom(idx) { plannedRooms.splice(idx, 1); renderRoomCards(); }
+    function calculateRoomTotal(room) { return room.devices.reduce((acc, d) => { const base = d.mrp - (d.mrp*(d.discount/100)); return acc + ((base+(base*(d.gst/100)))*d.qty); }, 0); }
+
+    function syncPlannerToQuotation() {
+        const tbody = document.getElementById('tableBody'); tbody.innerHTML = "";
+        plannedRooms.forEach(room => {
+            room.devices.forEach(d => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td class="row-index"></td><td><div class="val-mirror">${room.name}</div><input type="text" class="row-input" value="${room.name}" readonly></td><td><div class="val-mirror">${d.series}</div><input type="text" class="row-input" value="${d.series}" readonly></td><td><div class="val-mirror">${d.item}</div><input type="text" class="row-input" value="${d.item}" readonly></td><td><div class="val-mirror">${d.hsn}</div><input type="text" class="row-input hsn-code" value="${d.hsn}" oninput="mirrorValue(this)"></td><td><div class="val-mirror">${d.qty}</div><input type="number" class="row-input qty" value="${d.qty}" oninput="updateTableCalc(this); mirrorValue(this)"></td><td><div class="val-mirror">${d.mrp}</div><input type="number" class="row-input mrp" value="${d.mrp}" oninput="updateTableCalc(this); mirrorValue(this)"></td><td><div class="val-mirror">${parseFloat(d.discount).toFixed(2)}</div><input type="number" class="row-input disc" value="${parseFloat(d.discount).toFixed(2)}" oninput="updateTableCalc(this); mirrorValue(this)"></td><td><div class="val-mirror">0.00</div><input type="text" class="row-input readonly-input base-rate" readonly value="0.00"></td><td><div class="val-mirror">0.00</div><input type="text" class="row-input readonly-input amount" readonly value="0.00"></td><td><div class="val-mirror">${parseFloat(d.gst).toFixed(2)}</div><input type="number" class="row-input gst-perc" value="${parseFloat(d.gst).toFixed(2)}" oninput="updateTableCalc(this)"></td><td><div class="val-mirror">0.00</div><input type="text" class="row-input readonly-input gst-amt" readonly value="0.00"></td><td><div class="val-mirror">0.00</div><input type="text" class="row-input readonly-input row-total" readonly value="0.00" style="color:var(--primary); font-weight:bold;"></td><td class="no-print" style="text-align:center;">🔒</td>`;
+                tbody.appendChild(tr); updateTableCalc(tr.querySelector('.qty'));
+            });
+        });
+        manualItems.forEach(m => { addManualRow(m); });
+        updateIndices();
+    }
+
+    function addRow() { addManualRow(); updateIndices(); }
+    function addManualRow(data = null) {
+        const tbody = document.getElementById('tableBody');
+        const tr = document.createElement('tr'); tr.className = 'is-manual';
+        const sOpts = Object.keys(deviceDatabase).map(s => `<option value="${s}" ${data&&data.series===s?'selected':''}>${s}</option>`).join('');
+        tr.innerHTML = `<td class="row-index"></td><td><div class="val-mirror">${data?data.room:'Manual'}</div><input type="text" class="row-input room-input" value="${data?data.room:'Manual'}" oninput="mirrorValue(this)"></td><td><div class="val-mirror">${data?data.series:''}</div><select class="row-input series-select" onchange="updateItems(this); mirrorValue(this)"><option value="">Series...</option>${sOpts}</select></td><td><div class="val-mirror">${data?data.item:''}</div><select class="row-input item-select" onchange="autoFillDetails(this); mirrorValue(this)"><option value="">Item...</option></select></td><td><div class="val-mirror">${data?data.hsn:''}</div><input type="text" class="row-input hsn-code" value="${data?data.hsn:''}" oninput="mirrorValue(this)"></td><td><div class="val-mirror">${data?data.qty:'1'}</div><input type="number" class="row-input qty" value="${data?data.qty:'1'}" oninput="updateTableCalc(this); mirrorValue(this)"></td><td><div class="val-mirror">${data?data.mrp:'0'}</div><input type="number" class="row-input mrp" value="${data?data.mrp:'0'}" oninput="updateTableCalc(this); mirrorValue(this)"></td><td><div class="val-mirror">${data?parseFloat(data.disc).toFixed(2):'0.00'}</div><input type="number" class="row-input disc" value="${data?parseFloat(data.disc).toFixed(2):'0'}" oninput="updateTableCalc(this); mirrorValue(this)"></td><td><div class="val-mirror">0.00</div><input type="text" class="row-input readonly-input base-rate" readonly value="0.00"></td><td><div class="val-mirror">0.00</div><input type="text" class="row-input readonly-input amount" readonly value="0.00"></td><td><div class="val-mirror">${data?parseFloat(data.gst).toFixed(2):'18.00'}</div><input type="number" class="row-input gst-perc" value="${data?parseFloat(data.gst).toFixed(2):'18'}" oninput="updateTableCalc(this)"></td><td><div class="val-mirror">0.00</div><input type="text" class="row-input readonly-input gst-amt" readonly value="0.00"></td><td><div class="val-mirror">0.00</div><input type="text" class="row-input readonly-input row-total" readonly value="0.00" style="color:var(--primary); font-weight:bold;"></td><td class="no-print"><button style="color:red; background:none; border:none; cursor:pointer;" onclick="this.closest('tr').remove(); calculateGrandTotal(); updateIndices();">✕</button></td>`;
+        tbody.appendChild(tr);
+        if (data) { updateItems(tr.querySelector('.series-select')); tr.querySelector('.item-select').value = data.item; updateTableCalc(tr.querySelector('.qty')); }
+    }
+
+    function updateItems(el) {
+        const tr = el.closest('tr'); const itSel = tr.querySelector('.item-select'); const s = el.value;
+        itSel.innerHTML = '<option value="">Select...</option>';
+        if (s && deviceDatabase[s]) deviceDatabase[s].forEach(p => {
+            const opt = document.createElement('option'); opt.value = p.item; opt.textContent = p.item; itSel.appendChild(opt);
+        });
+    }
+
+    function autoFillDetails(el) {
+        const tr = el.closest('tr'); const s = tr.querySelector('.series-select').value; const it = el.value;
+        if (s && it) {
+            const p = deviceDatabase[s].find(x => x.item === it);
+            tr.querySelector('.hsn-code').value = p.hsn || ""; tr.querySelector('.mrp').value = p.mrp || 0;
+            let d = p.discount || 0; if (d > 0 && d < 1) d *= 100;
+            let g = p.gst || 18; if (g > 0 && g < 1) g *= 100;
+            tr.querySelector('.disc').value = d.toFixed(2); tr.querySelector('.gst-perc').value = g.toFixed(2);
+            tr.querySelectorAll('input, select').forEach(mirrorValue);
+        }
+        updateTableCalc(el);
+    }
+
+    function updateTableCalc(inp) {
+        const tr = inp.closest('tr');
+        const q = parseFloat(tr.querySelector('.qty').value)||0, mrp = parseFloat(tr.querySelector('.mrp').value)||0, d = parseFloat(tr.querySelector('.disc').value)||0, gp = parseFloat(tr.querySelector('.gst-perc').value)||0;
+        const b = mrp - (mrp*(d/100)), a = b*q, ga = a*(gp/100);
+        tr.querySelector('.base-rate').value = b.toFixed(2); tr.querySelector('.amount').value = a.toFixed(2); tr.querySelector('.gst-amt').value = ga.toFixed(2); tr.querySelector('.row-total').value = (a+ga).toFixed(2);
+        tr.querySelectorAll('input, .readonly-input').forEach(i => {
+            const m = i.previousElementSibling;
+            if(m && m.classList.contains('val-mirror')) {
+                let disp = i.value; if(i.classList.contains('disc') || i.classList.contains('gst-perc') || i.classList.contains('readonly-input')) disp = parseFloat(i.value||0).toFixed(2);
+                m.innerText = disp;
+            }
+        });
+        calculateGrandTotal();
+    }
+
+    function calculateGrandTotal() {
+        let tb=0, tg=0, gt=0;
+        document.querySelectorAll('#tableBody tr').forEach(tr => { tb += parseFloat(tr.querySelector('.amount').value)||0; tg += parseFloat(tr.querySelector('.gst-amt').value)||0; gt += parseFloat(tr.querySelector('.row-total').value)||0; });
+        document.getElementById('totalBase').innerText = `₹${tb.toLocaleString('en-IN', {minimumFractionDigits: 2})}`;
+        document.getElementById('totalGST').innerText = `₹${tg.toLocaleString('en-IN', {minimumFractionDigits: 2})}`;
+        document.getElementById('grandTotal').innerText = `₹${gt.toLocaleString('en-IN', {minimumFractionDigits: 2})}`;
+    }
+
+    function syncTerms() { document.getElementById('termsMirror').innerText = document.getElementById('termsArea').value; }
+
+    window.onload = function() {
+        updateAutomaticFields();
+        fetchLiveData(); 
+        syncTerms();
+        document.querySelectorAll('.project-info input').forEach(mirrorProjectInfo);
+    };
+</script>
+</body>
+</html>
