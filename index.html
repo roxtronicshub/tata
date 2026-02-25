@@ -1,4 +1,4 @@
-<!-- Version: Checkpoint-42 | Status: Optimized Print Font Size, Flashing Live Badge, Improved Button Alignment, Premium EZ Theme -->
+<!-- Version: Checkpoint-57 | Status: Added Refresh Warning, Dynamic Download Button, Fixed Quotation Sync | Premium EZ Theme -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,6 +16,9 @@
             --text-dark: #1f2937;
             --text-muted: #6b7280;
             --border: #e5e7eb;
+            --warning-bg: #fff7ed;
+            --warning-text: #9a3412;
+            --warning-border: #f97316;
         }
         
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -25,6 +28,22 @@
             background-color: var(--ez-light-bg); 
             color: var(--text-dark); 
             line-height: 1.6;
+        }
+
+        /* --- REFRESH WARNING --- */
+        .refresh-notice {
+            background-color: var(--warning-bg);
+            color: var(--warning-text);
+            border-left: 4px solid var(--warning-border);
+            padding: 10px 20px;
+            margin-bottom: 25px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
         }
 
         /* --- LOGIN OVERLAY --- */
@@ -64,6 +83,13 @@
         .partner-tag { font-size: 9px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
         .quotation-title { text-align: right; }
         .quotation-title h1 { color: var(--ez-brown); font-size: 32px; font-weight: 900; letter-spacing: -1px; display: flex; align-items: center; justify-content: flex-end; }
+
+        /* --- ROLE BADGE --- */
+        .role-badge {
+            padding: 4px 10px; border-radius: 4px; font-size: 10px; font-weight: 800; text-transform: uppercase; color: white; margin-left: 15px; vertical-align: middle; display: inline-block;
+        }
+        .badge-admin { background-color: var(--ez-brown); color: var(--ez-gold); border: 1px solid var(--ez-gold); }
+        .badge-arch { background-color: var(--ez-gold); color: var(--ez-brown); }
 
         /* --- BUTTONS --- */
         .btn { 
@@ -174,7 +200,7 @@
         #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: var(--ez-brown); color: white; padding: 12px 30px; border-radius: 2px; z-index: 9999; display: none; font-size: 14px; font-weight: 600; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
 
         @media print {
-            .no-print, .tabs, .search-box-container, .header-status, .add-row-container, .btn, #loginOverlay, .policy-box button, #toast, .modal-overlay { display: none !important; }
+            .no-print, .tabs, .search-box-container, .header-status, .add-row-container, .btn, #loginOverlay, .policy-box button, #toast, .modal-overlay, .refresh-notice { display: none !important; }
             body { background: white !important; }
             .container { display: block !important; box-shadow: none !important; border: none !important; padding: 0 !important; width: 100% !important; margin: 0 !important; }
             .project-info { display: grid !important; grid-template-columns: 1fr 1fr !important; border: 1px solid #eee !important; background: #fafafa !important; padding: 15px !important; margin-bottom: 20px !important; }
@@ -182,7 +208,6 @@
             .display-label, input, select, textarea { display: none !important; }
             .table-container { overflow: visible !important; border: none !important; margin-top: 10px !important; }
             table { width: 100% !important; border: 1px solid #ccc !important; min-width: unset !important; table-layout: auto !important; }
-            /* FIXED: Standardized smaller font for print for a professional look */
             th { background: #f0f0f0 !important; color: black !important; border: 1px solid #ccc !important; font-size: 7.5pt !important; padding: 6px 4px !important; }
             td { border: 1px solid #ccc !important; font-size: 8pt !important; padding: 6px 4px !important; word-wrap: break-word !important; }
             
@@ -230,6 +255,11 @@
 </div>
 
 <div class="container" id="mainApp">
+    <!-- REFRESH WARNING BAR -->
+    <div class="refresh-notice no-print">
+        <span>⚠️ <b>Important:</b> Please do not refresh the page during your session. Refreshing will log you out and clear unsaved data.</span>
+    </div>
+
     <!-- Header -->
     <div class="header-top">
         <div class="company-logo-area">
@@ -367,7 +397,7 @@
         <button class="btn" style="border-color: #fca5a5; color: #ef4444;" onclick="resetApp()">New Project</button>
         <button class="btn btn-solid" id="globalSaveBtn" onclick="saveQuotation()">Save To Cloud →</button>
         <button class="btn btn-settings" style="border-color: #94a3b8; color: #64748b;" onclick="showTermsPopup()">Settings ⚙️</button>
-        <button class="btn" style="flex-grow: 1; justify-content: center; background: #f3f4f6; border-color: #d1d5db;" onclick="window.print()">Download Professional PDF ↓</button>
+        <button class="btn" id="mainDownloadBtn" style="flex-grow: 1; justify-content: center; background: #f3f4f6; border-color: #d1d5db;" onclick="window.print()">Download Professional PDF ↓</button>
     </div>
 </div>
 
@@ -509,6 +539,7 @@
     function closeSuccessModal() { document.getElementById('successModal').style.display = 'none'; }
 
     function mirrorProjectInfo(el) { const m = document.getElementById(el.id === 'custName' ? 'mirrorCustName' : 'mirrorSiteAddr'); if (m) m.innerText = el.value; }
+    
     function updateLabelMirrors() {
         document.getElementById('mirrorQuotNo').innerText = document.getElementById('quotNo').innerText;
         document.getElementById('mirrorDate').innerText = document.getElementById('quotDate').innerText;
@@ -613,6 +644,21 @@
         const tBtn = document.getElementById('tab-' + tab);
         if(tBtn) tBtn.classList.add('active');
         document.getElementById(tab + 'Tab').style.display = 'block';
+
+        const footer = document.getElementById('footerActions');
+        const downloadBtn = document.getElementById('mainDownloadBtn');
+
+        if (tab === 'customer') {
+            footer.style.display = 'none'; 
+        } else {
+            footer.style.display = 'flex';
+            if (tab === 'planner') {
+                downloadBtn.innerHTML = "Download Room Map ↓"; 
+            } else {
+                downloadBtn.innerHTML = "Download Professional PDF ↓"; 
+            }
+        }
+
         if (tab === 'quotation') { syncPlannerToQuotation(); syncPolicies(); }
     }
 
@@ -768,7 +814,7 @@
         document.getElementById('warrantyMirrorDisplay').innerText = warrantyVal;
     }
     
-    function saveManualEntriesToMemory() { 
+    async function saveManualEntriesToMemory() { 
         manualItems = []; document.querySelectorAll('#tableBody tr.is-manual').forEach(row => { 
             const sSel = row.querySelector('.series-select'), iSel = row.querySelector('.item-select');
             manualItems.push({ room: row.querySelector('.room-input').value, series: sSel?sSel.value:"", item: iSel?iSel.value:"", hsn: row.querySelector('.hsn-code').value, qty: row.querySelector('.qty').value, mrp: row.querySelector('.mrp').value, disc: row.querySelector('.disc').value, gst: row.querySelector('.gst-perc').value }); 
