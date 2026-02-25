@@ -1,4 +1,4 @@
-<!-- Version: Checkpoint-57 | Status: Added Refresh Warning, Dynamic Download Button, Fixed Quotation Sync | Premium EZ Theme -->
+<!-- Version: Checkpoint-59 | Status: Fully Mobile Responsive, Refresh Warning, Dynamic Download Button, Fixed Sync | Premium EZ Theme -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,6 +28,7 @@
             background-color: var(--ez-light-bg); 
             color: var(--text-dark); 
             line-height: 1.6;
+            overflow-x: hidden;
         }
 
         /* --- REFRESH WARNING --- */
@@ -54,10 +55,11 @@
             background-size: cover; background-position: center;
             display: flex; justify-content: center; align-items: center;
             z-index: 5000;
+            padding: 15px;
         }
         .login-card {
             background: rgba(255, 255, 255, 0.98); padding: 50px 40px; border-radius: 4px;
-            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.4); width: 90%; max-width: 440px; text-align: center;
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.4); width: 100%; max-width: 440px; text-align: center;
         }
         .login-card h2 { color: var(--ez-brown); font-size: 28px; margin-bottom: 10px; font-weight: 800; letter-spacing: -0.5px; }
         .login-card input { width: 100%; padding: 15px; margin-bottom: 15px; border: 1px solid var(--border); border-radius: 4px; font-size: 15px; text-align: center; outline: none; }
@@ -75,14 +77,14 @@
         }
 
         /* --- HEADER --- */
-        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid var(--border); padding-bottom: 20px; flex-wrap: wrap; gap: 20px; }
         .company-logo-area { display: flex; align-items: center; gap: 15px; }
         .company-logo-area img { max-height: 50px; }
         .tata-logo-black { filter: brightness(0); }
         .logo-divider { height: 40px; width: 1px; background-color: var(--border); }
         .partner-tag { font-size: 9px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
         .quotation-title { text-align: right; }
-        .quotation-title h1 { color: var(--ez-brown); font-size: 32px; font-weight: 900; letter-spacing: -1px; display: flex; align-items: center; justify-content: flex-end; }
+        .quotation-title h1 { color: var(--ez-brown); font-size: 32px; font-weight: 900; letter-spacing: -1px; display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; }
 
         /* --- ROLE BADGE --- */
         .role-badge {
@@ -96,7 +98,7 @@
             padding: 10px 22px; border: 1px solid var(--ez-brown); background: transparent; 
             color: var(--ez-brown); font-weight: 700; cursor: pointer; transition: 0.3s; 
             font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; display: inline-flex; align-items: center; gap: 8px;
-            border-radius: 2px; height: 40px; outline: none;
+            border-radius: 2px; min-height: 40px; outline: none;
         }
         .btn:hover { background: var(--ez-gold); border-color: var(--ez-gold); color: white; }
         .btn-solid { background: var(--ez-brown); color: white; border: none; }
@@ -105,7 +107,7 @@
 
         /* --- DASHBOARD --- */
         .project-info { 
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); 
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
             gap: 25px; margin-bottom: 40px; padding: 25px; background: var(--ez-light-bg); 
             border: 1px solid var(--border);
         }
@@ -114,20 +116,20 @@
         .display-label { padding: 5px 0; font-weight: 800; color: var(--ez-brown); font-size: 18px; }
 
         /* --- TABS --- */
-        .tabs { display: flex; gap: 30px; margin-bottom: 30px; border-bottom: 1px solid var(--border); }
+        .tabs { display: flex; gap: 30px; margin-bottom: 30px; border-bottom: 1px solid var(--border); overflow-x: auto; -webkit-overflow-scrolling: touch; }
         .tab-btn {
             padding: 15px 5px; border: none; background: none; 
             cursor: pointer; font-weight: 700; transition: 0.3s; font-size: 13px; color: var(--text-muted);
-            text-transform: uppercase; letter-spacing: 0.5px; position: relative;
+            text-transform: uppercase; letter-spacing: 0.5px; position: relative; white-space: nowrap;
         }
         .tab-btn.active { color: var(--ez-brown); }
         .tab-btn.active::after { content: ''; position: absolute; bottom: -1px; left: 0; width: 100%; height: 3px; background: var(--ez-gold); }
 
         /* --- TOOLBARS --- */
         .toolbar-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 15px; }
-        .toolbar-actions { display: flex; align-items: center; gap: 12px; }
+        .toolbar-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 
-        /* --- LIVE STATUS BADGE WITH FLASHING DOT --- */
+        /* --- LIVE STATUS BADGE --- */
         .live-status-badge {
             display: inline-flex; align-items: center; gap: 10px;
             background: #f3f4f6; border-radius: 50px; padding: 6px 16px;
@@ -139,9 +141,7 @@
             height: 8px; width: 8px; background-color: #10b981; border-radius: 50%;
             display: inline-block; position: relative;
         }
-        .status-online .status-dot {
-            animation: pulse-green 2s infinite;
-        }
+        .status-online .status-dot { animation: pulse-green 2s infinite; }
         @keyframes pulse-green {
             0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
             70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
@@ -149,7 +149,7 @@
         }
 
         /* --- ROOM CARDS --- */
-        .room-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; margin-top: 10px; }
+        .room-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; margin-top: 10px; }
         .room-card { 
             border: 1px solid var(--border); background: white; overflow: hidden; display: flex; flex-direction: column; 
             transition: all 0.3s ease; border-top: 4px solid var(--ez-brown);
@@ -184,20 +184,38 @@
 
         /* --- MODALS --- */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); display: none; justify-content: center; align-items: center; z-index: 6000; padding: 15px; backdrop-filter: blur(4px); }
-        .modal-content { background: white; padding: 40px; border-radius: 4px; width: 95%; max-width: 480px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
-        .modal-content h2 { color: var(--ez-brown); font-weight: 900; font-size: 24px; margin-bottom: 20px; text-transform: uppercase; }
+        .modal-content { background: white; padding: 30px; border-radius: 4px; width: 100%; max-width: 480px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); overflow-y: auto; max-height: 90vh; }
+        .modal-content h2 { color: var(--ez-brown); font-weight: 900; font-size: 20px; margin-bottom: 20px; text-transform: uppercase; }
 
-        .multiplier-grid { display: flex; flex-direction: column; gap: 10px; margin: 20px 0; max-height: 50vh; overflow-y: auto; }
-        .multiplier-row { display: grid; grid-template-columns: 1fr 80px; align-items: center; padding: 12px 15px; background: #fafafa; border-radius: 2px; border: 1px solid #eee; }
+        .multiplier-grid { display: flex; flex-direction: column; gap: 10px; margin: 20px 0; }
+        .multiplier-row { display: grid; grid-template-columns: 1fr 80px; align-items: center; padding: 10px 15px; background: #fafafa; border-radius: 2px; border: 1px solid #eee; }
         .multiplier-row input { padding: 8px; border: 1px solid var(--border); text-align: center; font-weight: 700; outline: none; }
 
         /* Policy UI */
-        .policy-container { margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        .policy-container { margin-top: 30px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
         .policy-box { padding: 20px; background: #fdfdfd; border: 1px dashed var(--border); border-radius: 4px; position: relative; }
         .policy-box h5 { font-size: 11px; text-transform: uppercase; color: var(--ez-brown); margin-bottom: 12px; font-weight: 800; letter-spacing: 1px; }
         .policy-text { font-size: 13px; color: var(--text-muted); line-height: 1.6; white-space: pre-wrap; }
 
-        #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: var(--ez-brown); color: white; padding: 12px 30px; border-radius: 2px; z-index: 9999; display: none; font-size: 14px; font-weight: 600; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: var(--ez-brown); color: white; padding: 12px 30px; border-radius: 2px; z-index: 9999; display: none; font-size: 14px; font-weight: 600; box-shadow: 0 10px 30px rgba(0,0,0,0.2); text-align: center; width: 90%; max-width: 300px; }
+
+        /* --- MOBILE ADJUSTMENTS --- */
+        @media (max-width: 768px) {
+            .container { margin: 10px; padding: 15px; border-top-width: 4px; }
+            .header-top { justify-content: center; text-align: center; }
+            .quotation-title { text-align: center; width: 100%; }
+            .quotation-title h1 { justify-content: center; font-size: 24px; }
+            .project-info { padding: 15px; gap: 15px; }
+            .display-label { font-size: 16px; }
+            .toolbar-header { flex-direction: column; align-items: flex-start; }
+            .toolbar-actions { width: 100%; }
+            .toolbar-actions input, .toolbar-actions button { flex-grow: 1; }
+            .grand-total-section { padding: 20px; justify-content: center; text-align: center; gap: 20px; }
+            .total-box p { font-size: 22px; }
+            .actions.no-print { flex-direction: column; }
+            .actions.no-print .btn { width: 100%; justify-content: center; }
+            .tab-btn { font-size: 11px; padding: 10px 5px; }
+        }
 
         @media print {
             .no-print, .tabs, .search-box-container, .header-status, .add-row-container, .btn, #loginOverlay, .policy-box button, #toast, .modal-overlay, .refresh-notice { display: none !important; }
@@ -210,7 +228,6 @@
             table { width: 100% !important; border: 1px solid #ccc !important; min-width: unset !important; table-layout: auto !important; }
             th { background: #f0f0f0 !important; color: black !important; border: 1px solid #ccc !important; font-size: 7.5pt !important; padding: 6px 4px !important; }
             td { border: 1px solid #ccc !important; font-size: 8pt !important; padding: 6px 4px !important; word-wrap: break-word !important; }
-            
             .grand-total-section { background: #2b1d10 !important; color: #e0b440 !important; margin-top: 15px !important; padding: 20px !important; }
             .total-box p { color: #e0b440 !important; font-size: 18pt !important; }
             .policy-container { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 20px !important; border-top: 1px solid #eee !important; margin-top: 20px !important; padding-top: 15px !important; }
@@ -246,9 +263,9 @@
 
 <!-- Success Modal -->
 <div id="successModal" class="modal-overlay" style="display: none;">
-    <div class="modal-content" style="text-align: center; padding: 50px;">
+    <div class="modal-content" style="text-align: center; padding: 40px;">
         <div style="font-size: 60px; margin-bottom: 20px; color: var(--secondary);">✔️</div>
-        <h2 id="successTitle" style="color: var(--ez-brown); margin-bottom: 12px; font-size: 26px;">Success!</h2>
+        <h2 id="successTitle" style="color: var(--ez-brown); margin-bottom: 12px; font-size: 24px;">Success!</h2>
         <p id="successMsg" style="color: var(--text-muted); margin-bottom: 30px; font-size: 15px;">Action completed successfully.</p>
         <button class="btn btn-solid" style="width: 100%;" onclick="closeSuccessModal()">Continue →</button>
     </div>
@@ -257,7 +274,7 @@
 <div class="container" id="mainApp">
     <!-- REFRESH WARNING BAR -->
     <div class="refresh-notice no-print">
-        <span>⚠️ <b>Important:</b> Please do not refresh the page during your session. Refreshing will log you out and clear unsaved data.</span>
+        <span>⚠️ <b>Important:</b> Please do not refresh the page. Refreshing will log you out.</span>
     </div>
 
     <!-- Header -->
@@ -311,10 +328,10 @@
     <div class="toolbar-header no-print">
         <div class="live-status-badge status-offline" id="statusBadge">
             <span class="status-dot"></span>
-            <span id="syncStatus">Syncing Master Data...</span>
+            <span id="syncStatus">Syncing...</span>
         </div>
         <div class="toolbar-actions">
-            <input type="text" id="searchQuotInput" class="search-input" placeholder="Find Quotation No." style="padding: 8px 12px; border: 1px solid var(--border); border-radius: 2px; width: 220px; font-size: 13px;">
+            <input type="text" id="searchQuotInput" class="search-input" placeholder="Find Quotation No." style="padding: 8px 12px; border: 1px solid var(--border); border-radius: 2px; width: 180px; font-size: 13px;">
             <button class="btn btn-solid" style="height: 38px; font-size: 11px;" onclick="searchQuotation()">Search 🔍</button>
             <button class="btn" style="height: 38px; font-size: 11px; border-color: #cbd5e1; color: #64748b;" onclick="fetchLiveData()">Sync Master 🔄</button>
         </div>
@@ -323,35 +340,34 @@
     <!-- TAB: CUSTOMER REGISTRATION -->
     <div id="customerTab" class="tab-content" style="display:none;">
         <h2 style="margin-bottom: 25px; border-left: 5px solid var(--ez-gold); padding-left: 15px; text-transform: uppercase; font-size: 18px; color: var(--ez-brown);">Customer Registration</h2>
-        <div class="project-info" style="grid-template-columns: 1fr 1fr; background: white;">
-            <div class="info-group" style="grid-column: span 2;">
+        <div class="project-info" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); background: white;">
+            <div class="info-group" style="grid-column: 1/-1;">
                 <label>Category</label>
-                <div class="category-group">
+                <div class="category-group" style="display: flex; gap: 15px; flex-wrap: wrap; padding: 10px 0;">
                     <label class="radio-item"><input type="radio" name="custCategory" value="Individual" checked> Individual</label>
                     <label class="radio-item"><input type="radio" name="custCategory" value="Builder"> Builder</label>
                     <label class="radio-item"><input type="radio" name="custCategory" value="Architect"> Architect</label>
                     <label class="radio-item"><input type="radio" name="custCategory" value="Designer"> Designer</label>
                 </div>
             </div>
-            <div class="info-group"><label>Full Name</label><input type="text" id="regName" placeholder="Enter full name"></div>
+            <div class="info-group"><label>Full Name</label><input type="text" id="regName" placeholder="Enter name"></div>
             <div class="info-group"><label>Mobile Number</label><input type="tel" id="regPhone" placeholder="+91"></div>
             <div class="info-group"><label>Email Address</label><input type="email" id="regEmail" placeholder="email@example.com"></div>
-            <div class="info-group"><label>Complete Site Address</label><input type="text" id="regAddr" placeholder="Details of project site"></div>
+            <div class="info-group" style="grid-column: 1/-1;"><label>Site Address</label><input type="text" id="regAddr" placeholder="Details"></div>
         </div>
         <div style="margin-top: 20px;"><button class="btn btn-solid" onclick="saveCustomerRegistration()">Register New Customer →</button></div>
     </div>
 
     <!-- TAB: ROOM PLANNER -->
     <div id="plannerTab" class="tab-content">
-        <!-- Spacing Optimized -->
-        <div class="toolbar-header no-print" style="margin-top: 20px;">
-            <div class="toolbar-actions" style="gap: 15px;">
-                <button class="btn btn-solid" onclick="showRoomPopup()">+ Add Rooms / Site</button>
-                <button class="btn" style="border-color: #cbd5e1; color: #64748b;" onclick="showCustomRoomPopup()">+ Add Other Area</button>
+        <div class="toolbar-header no-print" style="margin-top: 10px;">
+            <div class="toolbar-actions" style="gap: 10px; width: 100%;">
+                <button class="btn btn-solid" style="flex: 1;" onclick="showRoomPopup()">+ Add Rooms / Site</button>
+                <button class="btn" style="flex: 1; border-color: #cbd5e1; color: #64748b;" onclick="showCustomRoomPopup()">+ Add Area</button>
             </div>
         </div>
         <div id="roomContainer" class="room-grid">
-            <div style="text-align: center; grid-column: 1/-1; padding: 60px; color: #9ca3af;">Configuration area. Click buttons to begin.</div>
+            <div style="text-align: center; grid-column: 1/-1; padding: 60px; color: #9ca3af;">Click buttons to start planning.</div>
         </div>
     </div>
 
@@ -368,9 +384,9 @@
         <div class="add-row-container no-print" style="margin-top: 20px;"><button class="btn" onclick="addRow()">+ Manual Line Item</button></div>
         
         <div class="grand-total-section">
-            <div class="total-box"><h3>Taxable Amount</h3><p id="totalBase">₹0.00</p></div>
-            <div class="total-box"><h3>Total GST</h3><p id="totalGST">₹0.00</p></div>
-            <div class="total-box" style="border-left: 1px solid rgba(255,255,255,0.2); padding-left: 30px;"><h3>Grand Total</h3><p id="grandTotal">₹0.00</p></div>
+            <div class="total-box"><h3>Taxable</h3><p id="totalBase">₹0.00</p></div>
+            <div class="total-box"><h3>GST</h3><p id="totalGST">₹0.00</p></div>
+            <div class="total-box" style="border-left: 1px solid rgba(255,255,255,0.2); padding-left: 20px;"><h3>Total</h3><p id="grandTotal">₹0.00</p></div>
         </div>
         
         <div class="quotation-footer">
@@ -393,11 +409,11 @@
     </div>
 
     <!-- MAIN ACTIONS -->
-    <div class="actions no-print" id="footerActions" style="margin-top: 50px; border-top: 1px solid var(--border); padding-top: 30px; display: flex; gap: 15px; flex-wrap: wrap;">
+    <div class="actions no-print" id="footerActions" style="margin-top: 40px; border-top: 1px solid var(--border); padding-top: 30px; display: flex; gap: 15px; flex-wrap: wrap;">
         <button class="btn" style="border-color: #fca5a5; color: #ef4444;" onclick="resetApp()">New Project</button>
         <button class="btn btn-solid" id="globalSaveBtn" onclick="saveQuotation()">Save To Cloud →</button>
         <button class="btn btn-settings" style="border-color: #94a3b8; color: #64748b;" onclick="showTermsPopup()">Settings ⚙️</button>
-        <button class="btn" id="mainDownloadBtn" style="flex-grow: 1; justify-content: center; background: #f3f4f6; border-color: #d1d5db;" onclick="window.print()">Download Professional PDF ↓</button>
+        <button class="btn" id="mainDownloadBtn" style="flex-grow: 1; justify-content: center; background: #f3f4f6; border-color: #d1d5db;" onclick="window.print()">Download PDF ↓</button>
     </div>
 </div>
 
@@ -405,42 +421,21 @@
 <div id="termsModal" class="modal-overlay" style="display: none;">
     <div class="modal-content">
         <h2>Portal Settings</h2>
-        <div class="info-group">
-            <label>Payment Schedule</label>
-            <textarea id="paymentArea" style="height: 100px; width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 4px; font-family: inherit; outline: none;"></textarea>
-        </div>
-        <div class="info-group" style="margin-top:20px;">
-            <label>Warranty & General Policies</label>
-            <textarea id="warrantyArea" style="height: 150px; width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 4px; font-family: inherit; outline: none;"></textarea>
-        </div>
+        <div class="info-group"><label>Payment Schedule</label><textarea id="paymentArea" style="height: 100px; width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 4px; font-family: inherit; outline: none;"></textarea></div>
+        <div class="info-group" style="margin-top:20px;"><label>Warranty & General Policies</label><textarea id="warrantyArea" style="height: 150px; width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 4px; font-family: inherit; outline: none;"></textarea></div>
         <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 25px;">
-            <button class="btn btn-solid" style="font-size: 11px;" onclick="updateUserDefaults()">Update Cloud Profile</button>
-            <button class="btn" style="font-size: 11px;" onclick="closeTermsPopup()">Close Window</button>
+            <button class="btn btn-solid" style="font-size: 11px;" onclick="updateUserDefaults()">Update Cloud</button>
+            <button class="btn" style="font-size: 11px;" onclick="closeTermsPopup()">Close</button>
         </div>
     </div>
 </div>
 
 <div id="roomModal" class="modal-overlay" style="display: none;">
-    <div class="modal-content">
-        <h2>Room Configuration</h2>
-        <div class="multiplier-grid" id="multiplierInputs"></div>
-        <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 25px;">
-            <button class="btn" onclick="closeRoomPopup()">Cancel</button>
-            <button class="btn btn-solid" onclick="generateRoomCards()">Apply Configuration →</button>
-        </div>
-    </div>
+    <div class="modal-content"><h2>Room Configuration</h2><div class="multiplier-grid" id="multiplierInputs"></div><div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 25px;"><button class="btn" onclick="closeRoomPopup()">Cancel</button><button class="btn btn-solid" onclick="generateRoomCards()">Apply Configuration →</button></div></div>
 </div>
 
 <div id="customRoomModal" class="modal-overlay" style="display: none;">
-    <div class="modal-content">
-        <h2>Add Custom Area</h2>
-        <div class="info-group"><label>Area Name</label><input type="text" id="customRoomName" placeholder="e.g. Gym, Cinema"></div>
-        <div class="info-group" style="margin-top:15px;"><label>Quantity</label><input type="number" id="customRoomCount" value="1" min="1"></div>
-        <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 25px;">
-            <button class="btn" onclick="closeCustomRoomPopup()">Cancel</button>
-            <button class="btn btn-solid" onclick="addCustomRooms()">Add Areas →</button>
-        </div>
-    </div>
+    <div class="modal-content"><h2>Add Custom Area</h2><div class="info-group"><label>Area Name</label><input type="text" id="customRoomName" placeholder="e.g. Cinema"></div><div class="info-group" style="margin-top:15px;"><label>Quantity</label><input type="number" id="customRoomCount" value="1" min="1"></div><div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 25px;"><button class="btn" onclick="closeCustomRoomPopup()">Cancel</button><button class="btn btn-solid" onclick="addCustomRooms()">Add Areas →</button></div></div>
 </div>
 
 <script>
@@ -506,7 +501,6 @@
             const payload = { action: "updateUserDefaults", user: currentLoginUser, payment: pVal, warranty: wVal };
             await fetch(inbuiltUrl, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
             document.getElementById('successTitle').innerText = "Settings Updated!";
-            document.getElementById('successMsg').innerText = "Your portal preferences have been saved to the cloud.";
             closeTermsPopup(); 
             openSuccessModal();
         } catch(e) { showToast("Error!"); }
@@ -537,7 +531,6 @@
     function showToast(msg) { const t = document.getElementById('toast'); t.innerText = msg; t.style.display = 'block'; setTimeout(() => t.style.display = 'none', 3000); }
     function openSuccessModal() { document.getElementById('successModal').style.display = 'flex'; }
     function closeSuccessModal() { document.getElementById('successModal').style.display = 'none'; }
-
     function mirrorProjectInfo(el) { const m = document.getElementById(el.id === 'custName' ? 'mirrorCustName' : 'mirrorSiteAddr'); if (m) m.innerText = el.value; }
     
     function updateLabelMirrors() {
@@ -550,7 +543,6 @@
         if (!payload.name || !payload.phone) return showToast("Validation failed!");
         try { await fetch(inbuiltUrl, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) }); 
         document.getElementById('successTitle').innerText = "Customer Registered!";
-        document.getElementById('successMsg').innerText = "Client record added to cloud database.";
         openSuccessModal(); } catch (e) { showToast("Error!"); }
     }
 
@@ -572,7 +564,6 @@
     }
 
     async function fetchNextQuotNo() {
-        document.getElementById('quotNo').innerText = "...";
         try {
             const res = await fetch(`${inbuiltUrl}?action=getNextQuotNo&prefix=${encodeURIComponent(userPrefix)}&t=${Date.now()}`);
             const data = await res.json();
@@ -581,7 +572,7 @@
     }
 
     async function fetchLiveData() {
-        updateStatusBadge('offline', 'Syncing Database...');
+        updateStatusBadge('offline', 'Syncing...');
         try {
             const res = await fetch(inbuiltUrl + "?t=" + Date.now()); 
             const data = await res.json();
@@ -589,9 +580,8 @@
                 deviceDatabase = data; 
                 updateStatusBadge('online', 'Live Connected'); 
                 renderRoomCards(); 
-                showToast("Database Ready!"); 
             }
-        } catch (error) { updateStatusBadge('offline', 'Failed'); }
+        } catch (error) { updateStatusBadge('offline', 'Sync Error'); }
     }
 
     function updateStatusBadge(status, text) {
@@ -603,8 +593,7 @@
     async function searchQuotation() {
         const searchVal = document.getElementById('searchQuotInput').value.trim();
         if (!searchVal) return;
-        if (userRole === 'architect' && !searchVal.startsWith(userPrefix)) { showToast(`Access Denied!`); return; }
-        showToast("Retrieving Project...");
+        showToast("Fetching...");
         try {
             const res = await fetch(`${inbuiltUrl}?action=getQuotation&quotNo=${searchVal}`);
             const result = await res.json();
@@ -614,11 +603,6 @@
                 document.getElementById('quotNo').innerText = data.quotNo; document.getElementById('quotDate').innerText = data.date;
                 document.getElementById('mirrorCustName').innerText = data.custName; document.getElementById('mirrorSiteAddr').innerText = data.siteAddr;
                 document.getElementById('mirrorQuotNo').innerText = data.quotNo; document.getElementById('mirrorDate').innerText = data.date;
-                try {
-                    const termsParsed = JSON.parse(data.terms);
-                    document.getElementById('paymentArea').value = termsParsed.payment || "";
-                    document.getElementById('warrantyArea').value = termsParsed.warranty || "";
-                } catch(e) { document.getElementById('warrantyArea').value = data.terms; document.getElementById('paymentArea').value = ""; }
                 plannedRooms = data.plannedRooms; manualItems = data.manualItems;
                 renderRoomCards(); syncPlannerToQuotation(); syncPolicies();
             } else { showToast("No record found!"); }
@@ -627,13 +611,10 @@
 
     async function saveQuotation() {
         if (document.getElementById('quotationTab').style.display === 'block') saveManualEntriesToMemory();
-        const qNo = document.getElementById('quotNo').innerText;
-        if (qNo.includes("...")) return;
         const policies = { payment: document.getElementById('paymentArea').value, warranty: document.getElementById('warrantyArea').value };
-        const payload = { action: "saveQuotation", quotNo: qNo, custName: document.getElementById('custName').value, siteAddr: document.getElementById('siteAddr').value, date: document.getElementById('quotDate').innerText, plannedRooms: plannedRooms, manualItems: manualItems, grandTotal: document.getElementById('grandTotal').innerText, terms: JSON.stringify(policies) };
+        const payload = { action: "saveQuotation", quotNo: document.getElementById('quotNo').innerText, custName: document.getElementById('custName').value, siteAddr: document.getElementById('siteAddr').value, date: document.getElementById('quotDate').innerText, plannedRooms: plannedRooms, manualItems: manualItems, grandTotal: document.getElementById('grandTotal').innerText, terms: JSON.stringify(policies) };
         try { await fetch(inbuiltUrl, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) }); 
         document.getElementById('successTitle').innerText = "Project Saved!";
-        document.getElementById('successMsg').innerText = "Quotation synced with Master Cloud.";
         openSuccessModal(); resetApp(); } catch (e) { showToast("Error Saving!"); }
     }
 
@@ -667,7 +648,7 @@
         if (plannedRooms.length === 0) { container.innerHTML = `<div style="text-align:center;grid-column:1/-1;padding:60px;color:#9ca3af;">Click buttons to start planning.</div>`; return; }
         container.innerHTML = plannedRooms.map((room, idx) => {
             const seriesOpts = Object.keys(deviceDatabase).map(s => `<option value="${s}">${s}</option>`).join('');
-            return `<div class="room-card"><div class="room-card-header"><span>${room.name}</span><button style="background:none;color:#ef4444;border:none;cursor:pointer;" onclick="deleteRoom(${idx})">✖</button></div><div class="room-card-body"><ul class="device-list" style="list-style:none;">${room.devices.map((d, dIdx) => `<li class="device-item" style="display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid #f9f9f9;"><span>${d.item} <b>x${d.qty}</b></span><span class="no-print" style="cursor:pointer;color:red;" onclick="removeDevice(${idx}, ${dIdx})">🗑</span></li>`).join('')}</ul><div class="add-device-ui no-print" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; background:#f9f9f9; padding:10px; border-radius:4px;"><select class="room-series-select-${idx}" onchange="updateRoomCardItems(${idx})" style="padding:5px; font-size:11px; border:1px solid #ddd; outline:none;"><option value="">Series...</option>${seriesOpts}</select><select class="room-item-select-${idx}" style="padding:5px; font-size:11px; border:1px solid #ddd; outline:none;"><option value="">Item...</option></select><input type="number" class="room-qty-input-${idx}" value="1" min="1" style="padding:5px; font-size:11px; border:1px solid #ddd; outline:none;"><button class="btn btn-solid" style="padding:0; font-size:10px; height:30px;" onclick="addDeviceToRoom(${idx})">ADD +</button></div></div><div class="room-card-footer">Room Total: ₹${calculateRoomTotal(room).toLocaleString()}</div></div>`;
+            return `<div class="room-card"><div class="room-card-header"><span>${room.name}</span><button style="background:none;color:#ef4444;border:none;cursor:pointer;" onclick="deleteRoom(${idx})">✖</button></div><div class="room-card-body"><ul class="device-list" style="list-style:none;">${room.devices.map((d, dIdx) => `<li class="device-item"><span>${d.item} <b>x${d.qty}</b></span><span class="no-print" style="cursor:pointer;color:red;" onclick="removeDevice(${idx}, ${dIdx})">🗑</span></li>`).join('')}</ul><div class="add-device-ui no-print" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; background:#f9f9f9; padding:10px; border-radius:4px; margin-top:10px;"><select class="room-series-select-${idx}" onchange="updateRoomCardItems(${idx})" style="padding:5px; font-size:11px; border:1px solid #ddd; outline:none;"><option value="">Series...</option>${seriesOpts}</select><select class="room-item-select-${idx}" style="padding:5px; font-size:11px; border:1px solid #ddd; outline:none;"><option value="">Item...</option></select><input type="number" class="room-qty-input-${idx}" value="1" min="1" style="padding:5px; font-size:11px; border:1px solid #ddd; outline:none;"><button class="btn btn-solid" style="padding:0; font-size:10px; height:30px;" onclick="addDeviceToRoom(${idx})">ADD +</button></div></div><div class="room-card-footer">Total: ₹${calculateRoomTotal(room).toLocaleString()}</div></div>`;
         }).join('');
     }
 
